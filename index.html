@@ -3,8 +3,205 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>NovAI - AI Image & Video Generator</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<title>NovAI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#07070f;--card:#13131f;--surface:#0e0e1c;--border:rgba(255,255,255,0.08);--accent:#7c3aed;--cyan:#06b6d4;--text:#f0f0ff;--muted:#6b6b8a}
+:root{--bg:#07070f;--card:#13131f;--surface:#0e0e1c;--border:rgba(255,255,255,0.08);--accent:#7c3aed;--text:#f0f0ff;--muted:#6b6b8a}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;background:linear-gradient(135deg,#a78bfa,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;padding:16px 0 28px;display:block}
+.dot{width:8px;height:8px;border-radius:50%;background:#10b981;display:inline-block;margin-right:6px}
+.setup{background:var(--card);border:1px solid rgba(124,58,237,0.3);border-radius:20px;padding:28px;text-align:center;margin-bottom:20px}
+.setup h2{font-family:'Syne',sans-serif;font-size:20px;margin:12px 0 8px}
+.setup p{color:var(--muted);font-size:14px;margin-bottom:20px;line-height:1.6}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.kin{flex:1;min-width:200px;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:12px 16px;border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none}
+.kin:focus{border-color:rgba(124,58,237,0.5)}
+.kin::placeholder{color:var(--muted)}
+.sbtn{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;padding:12px 24px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:700;font-family:'Syne',sans-serif}
+.conn{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;font-size:13px}
+.disc{background:none;border:1px solid rgba(239,68,68,0.3);color:#ef4444;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px}
+.tabs{display:flex;gap:6px;background:var(--card);border-radius:14px;padding:5px;border:1px solid var(--border);margin-bottom:20px}
+.tab{padding:10px 20px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:500;border:none;background:none;color:var(--muted);font-family:'DM Sans',sans-serif}
+.tab.on{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px}
+.lbl{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.pbox{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
+.pbox:focus-within{border-color:rgba(124,58,237,0.5)}
+textarea{width:100%;background:none;border:none;outline:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;resize:none;min-height:88px;line-height:1.6}
+textarea::placeholder{color:var(--muted)}
+.opts{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+select{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:9px 14px;border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;flex:1;min-width:110px}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.pill{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.pill.on{background:rgba(124,58,237,0.15);border-color:rgba(124,58,237,0.5);color:#a78bfa}
+.gbtn{width:100%;padding:15px;border-radius:12px;border:none;cursor:pointer;font-size:16px;font-weight:700;font-family:'Syne',sans-serif;background:linear-gradient(135deg,#7c3aed,#4f46e5,#06b6d4);color:#fff;box-shadow:0 6px 28px rgba(124,58,237,0.4);transition:all 0.3s}
+.gbtn:disabled{opacity:0.6;cursor:not-allowed}
+.pbg{background:var(--surface);border-radius:100px;height:6px;overflow:hidden;margin-top:16px}
+.pfill{height:100%;border-radius:100px;background:linear-gradient(90deg,#7c3aed,#06b6d4);transition:width 0.4s}
+.pmsg{margin-top:8px;text-align:center;font-size:13px;color:var(--muted)}
+.err{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:12px;padding:14px;margin-top:14px;font-size:13px;color:#fca5a5;line-height:1.6}
+img.out,video.out{width:100%;border-radius:14px;margin-top:16px;border:1px solid var(--border)}
+.toast{position:fixed;bottom:24px;right:16px;z-index:9999;background:var(--card);border:1px solid rgba(16,185,129,0.3);color:var(--text);padding:12px 20px;border-radius:10px;font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<span class="logo">NovAI ✦</span>
+
+<div class="setup" id="setupBox">
+<div style="font-size:36px">🔑</div>
+<h2>Replicate API Key Daalo</h2>
+<p>replicate.com/account/api-tokens pe jaao, naya token banao aur yahan paste karo.</p>
+<div class="row">
+<input class="kin" type="password" id="keyInput" placeholder="r8_xxxxxxxxxxxxxxxxxxxx"/>
+<button class="sbtn" onclick="saveKey()">Connect ✦</button>
+</div>
+<div style="font-size:11px;color:#6b6b8a;margin-top:10px">🔒 Sirf is session mein save hoga</div>
+</div>
+
+<div class="conn" id="connBar" style="display:none">
+<span><span class="dot"></span>Connected — <span id="kprev"></span></span>
+<button class="disc" onclick="disconnect()">Disconnect</button>
+</div>
+
+<div class="tabs">
+<button class="tab on" id="t1" onclick="setMode('image')">🖼 Image</button>
+<button class="tab" id="t2" onclick="setMode('video')">🎬 Video</button>
+</div>
+
+<div class="card">
+<div class="lbl">Prompt</div>
+<div class="pbox">
+<textarea id="prompt" rows="4" placeholder="eg: A woman in grey blazer, urban city, cinematic lighting..."></textarea>
+</div>
+<div class="lbl">Settings</div>
+<div class="opts" id="imgOpts">
+<select id="imgSize">
+<option value="512x512">512×512 Fast</option>
+<option value="1024x1024" selected>1024×1024 HD</option>
+<option value="1024x1792">Portrait 9:16</option>
+<option value="1792x1024">Landscape 16:9</option>
+</select>
+</div>
+<div class="opts" id="vidOpts" style="display:none">
+<select id="vidDur">
+<option value="3">3 seconds</option>
+<option value="5" selected>5 seconds</option>
+<option value="8">8 seconds</option>
+</select>
+</div>
+<div class="lbl">Style</div>
+<div class="pills" id="pillBox"></div>
+<button class="gbtn" id="genBtn" onclick="gen()">✦ Generate Image</button>
+<div id="progBox" style="display:none">
+<div class="pbg"><div class="pfill" id="pfill" style="width:0%"></div></div>
+<div class="pmsg" id="pmsg">Processing...</div>
+</div>
+<div class="err" id="errBox" style="display:none"></div>
+<div id="outBox"></div>
+</div>
+</div>
+<div class="toast" id="toast" style="display:none"></div>
+
+<script>
+let key='',mode='image',result=null,pt=null;
+const IS=['Photorealistic','Cinematic','Anime','Watercolor','Cyberpunk','3D Render'];
+const VS=['Cinematic','Realistic','Animated','Slow Motion'];
+let style='Photorealistic';
+
+function pills(){
+  const s=mode==='image'?IS:VS;
+  document.getElementById('pillBox').innerHTML=s.map(x=>`<div class="pill ${x===style?'on':''}" onclick="ps('${x}')">${x}</div>`).join('');
+}
+function ps(s){style=s;pills()}
+function setMode(m){
+  mode=m;style=m==='image'?'Photorealistic':'Cinematic';
+  document.getElementById('t1').className='tab'+(m==='image'?' on':'');
+  document.getElementById('t2').className='tab'+(m==='video'?' on':'');
+  document.getElementById('imgOpts').style.display=m==='image'?'flex':'none';
+  document.getElementById('vidOpts').style.display=m==='video'?'flex':'none';
+  document.getElementById('genBtn').textContent='✦ Generate '+(m==='image'?'Image':'Video');
+  document.getElementById('outBox').innerHTML='';
+  document.getElementById('errBox').style.display='none';
+  pills();
+}
+function saveKey(){
+  const k=document.getElementById('keyInput').value.trim();
+  if(!k.startsWith('r8_')){toast('⚠️ Token r8_ se shuru hona chahiye');return}
+  key=k;
+  document.getElementById('setupBox').style.display='none';
+  document.getElementById('connBar').style.display='flex';
+  document.getElementById('kprev').textContent=k.slice(0,8)+'••••';
+  toast('✅ Connected!');
+}
+function disconnect(){
+  key='';
+  document.getElementById('setupBox').style.display='block';
+  document.getElementById('connBar').style.display='none';
+  document.getElementById('keyInput').value='';
+}
+function toast(m){
+  const t=document.getElementById('toast');
+  t.textContent=m;t.style.display='block';
+  setTimeout(()=>t.style.display='none',3000);
+}
+function prog(p,m){
+  document.getElementById('pfill').style.width=p+'%';
+  document.getElementById('pmsg').textContent=m;
+}
+async function poll(id){
+  for(let i=0;i<120;i++){
+    await new Promise(r=>setTimeout(r,3000));
+    const r=await fetch('/api/poll?id='+id+'&apiKey='+encodeURIComponent(key));
+    const d=await r.json();
+    if(d.status==='succeeded')return d.output;
+    if(d.status==='failed')throw new Error(d.error||'Failed');
+    prog(Math.min(90,30+i*2),'Generating... please wait');
+  }
+  throw new Error('Timeout');
+}
+async function gen(){
+  if(!key){toast('⚠️ API key daalo pehle!');return}
+  const p=document.getElementById('prompt').value.trim();
+  if(!p){toast('⚠️ Prompt likho!');return}
+  document.getElementById('genBtn').disabled=true;
+  document.getElementById('errBox').style.display='none';
+  document.getElementById('outBox').innerHTML='';
+  document.getElementById('progBox').style.display='block';
+  prog(10,'Starting...');
+  const fp=p+', '+style+' style, high quality';
+  try{
+    prog(20,'Sending to AI...');
+    let body={apiKey:key,mode,prompt:fp};
+    if(mode==='image'){const s=document.getElementById('imgSize').value.split('x');body.width=+s[0];body.height=+s[1];}
+    else{body.num_frames=+document.getElementById('vidDur').value*8;}
+    const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const d=await r.json();
+    if(d.error)throw new Error(d.error);
+    prog(40,'Processing...');
+    let out=d.output;
+    if(!out)out=await poll(d.id);
+    prog(100,'Done!');
+    const url=Array.isArray(out)?out[0]:out;
+    result={type:mode,url};
+    document.getElementById('outBox').innerHTML=mode==='image'
+      ?`<img class="out" src="${url}"/><br><button class="sbtn" style="margin-top:10px;width:100%" onclick="window.open('${url}','_blank')">⬇ Download</button>`
+      :`<video class="out" src="${url}" controls autoplay loop muted playsinline></video><br><button class="sbtn" style="margin-top:10px;width:100%" onclick="window.open('${url}','_blank')">⬇ Download</button>`;
+    toast(mode==='image'?'✨ Image ready!':'🎬 Video ready!');
+  }catch(e){
+    let m=e.message||'Error';
+    if(m.includes('401')||m.includes('Invalid'))m='❌ API key galat hai — naya token banao';
+    else if(m.includes('402')||m.includes('billing'))m='❌ Billing setup karo replicate.com/account/billing pe';
+    document.getElementById('errBox').textContent='⚠️ '+m;
+    document.getElementById('errBox').style.display='block';
+    document.getElementById('progBox').style.display='none';
+  }
+  document.getElementById('genBtn').disabled=false;
+  document.getElementById('genBtn').textContent='✦ Generate '+(mode==='image'?'Image':'Video');
+}
+pills();
+</script>
+</body>
+</html>
